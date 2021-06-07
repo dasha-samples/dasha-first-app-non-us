@@ -6,14 +6,14 @@ This example shows how to build conversational IVR on top of Dasha. If you need 
 
 ```sh
 git clone https://github.com/dasha-samples/dasha-first-app-non-us
-cd dasha-first-app
+cd dasha-first-app-non-us
 npm install
 ```
 
 2. Create or log into your account using the Dasha CLI tool:
 
 ```sh
-npx dasha account login
+npx dasha account login --server app.ru.dasha.ai
 ```
 
 3. To start a text chat, run:
