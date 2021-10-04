@@ -4,13 +4,6 @@ const fs = require("fs");
 async function main() {
   const app = await dasha.deploy("./app");
 
-  app.connectionProvider = async (conv) =>
-    conv.input.phone === "chat"
-      ? dasha.chat.connect(await dasha.chat.createConsoleChat())
-      : dasha.sip.connect(new dasha.sip.Endpoint("default"));
-
-  await app.start();
-
   const conv = app.createConversation({ phone: process.argv[2] ?? "" });
 
   if (conv.input.phone !== "chat") conv.on("transcription", console.log);
@@ -28,8 +21,12 @@ async function main() {
       await logFile.appendFile(JSON.stringify(logEntry, undefined, 2) + "\n");
     }
   });
+  
+  await app.start();
 
-  const result = await conv.execute();
+  const result = await conv.execute({
+    channel: conv.input.phone === "chat" ? "text" : "audio",
+  });
 
   console.log(result.output);
 
