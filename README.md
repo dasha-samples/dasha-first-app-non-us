@@ -7,7 +7,7 @@ This example shows how to build conversational IVR on top of Dasha. If you need 
 ```sh
 git clone https://github.com/dasha-samples/dasha-first-app-non-us
 cd dasha-first-app-non-us
-npm install
+npm ci
 ```
 
 2. Create or log into your account using the Dasha CLI tool:
