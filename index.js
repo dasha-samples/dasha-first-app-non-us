@@ -3,17 +3,17 @@ const fs = require("fs");
 
 async function main() {
   const app = await dasha.deploy("./app");
-
-  app.connectionProvider = async (conv) =>
-    conv.input.phone === "chat"
-      ? dasha.chat.connect(await dasha.chat.createConsoleChat())
-      : dasha.sip.connect(new dasha.sip.Endpoint("default"));
-
   await app.start();
 
   const conv = app.createConversation({ phone: process.argv[2] ?? "" });
+  const audioChannel = conv.input.phone !== "chat";
+  if (audioChannel) {
+    conv.sip.config = "default";
+  } else {
+    await dasha.chat.createConsoleChat(conv);
+  }
 
-  if (conv.input.phone !== "chat") conv.on("transcription", console.log);
+  if (audioChannel) conv.on("transcription", console.log);
 
   const logFile = await fs.promises.open("./log.txt", "w");
   await logFile.appendFile("#".repeat(100) + "\n");
@@ -29,9 +29,15 @@ async function main() {
     }
   });
 
-  const result = await conv.execute();
+  const result = await conv.execute({
+    channel: audioChannel ? "audio" : "text",
+  });
 
   console.log(result.output);
+  if (result.startTime || result.endTime) {
+    console.log(`Job start time: ${result.startTime}`);
+    console.log(`Job end time: ${result.endTime}`);
+  }
 
   await app.stop();
   app.dispose();
