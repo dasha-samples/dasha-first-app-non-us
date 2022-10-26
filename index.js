@@ -2,6 +2,12 @@ const dasha = require("@dasha.ai/sdk");
 const fs = require("fs");
 
 async function main() {
+  if(!process.argv[2]){
+    console.log(`Запускать необходимо с помощью:`)
+    console.log(`1. 'node index.js <номер телефона в формате +71234567890>'`);
+    console.log(`2. 'npm start <номер телефона в формате +71234567890>'`);
+    process.exit(0);
+  }
   const app = await dasha.deploy("./app");
   await app.start();
 
@@ -33,11 +39,7 @@ async function main() {
     channel: audioChannel ? "audio" : "text",
   });
 
-  console.log(result.output);
-  if (result.startTime || result.endTime) {
-    console.log(`Job start time: ${result.startTime}`);
-    console.log(`Job end time: ${result.endTime}`);
-  }
+  console.log(result);
 
   await app.stop();
   app.dispose();

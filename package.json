@@ -12,6 +12,6 @@
     "prettier": "^2.2.1"
   },
   "dependencies": {
-    "@dasha.ai/sdk": "^0.6.7"
+    "@dasha.ai/sdk": "^0.9.0"
   }
 }
